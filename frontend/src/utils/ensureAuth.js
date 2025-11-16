@@ -1,7 +1,7 @@
 import { useAuthStore } from '../stores/auth';
 import { isExpired } from './jwt';
 
-export async function ensureAuth({ redirectTo = '/login' } = {}) {
+export async function ensureAuth({ redirectTo = '/' } = {}) {
   const auth = useAuthStore();
   if (auth.access && !isExpired(auth.access)) return true;
   if (auth.refresh) {
