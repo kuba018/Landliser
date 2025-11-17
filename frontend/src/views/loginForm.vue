@@ -1,8 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+
+import InfoPanel from '../components/info.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
+import RegisterForm from '../components/RegisterForm.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -11,94 +14,119 @@ const username = ref('')
 const password = ref('')
 const error = ref('')
 
-// komunikat po weryfikacji maila
-const msg = ref('')
+// 'login' albo 'register'
+const mode = ref('login')
 
-onMounted(() => {
-  // Czytamy parametr ?verified=1 z URL-a
+async function handleLogin() {
+  error.value = ''
+
   try {
-    const url = new URL(window.location.href)
-    const verified = url.searchParams.get('verified')
-
-    if (verified === '1') {
-      msg.value = 'Twój adres e-mail został pomyślnie zweryfikowany. Możesz się teraz zalogować.'
-
-      // Usuwamy parametr z URL, żeby komunikat nie pokazywał się przy każdym odświeżeniu
-      url.searchParams.delete('verified')
-      window.history.replaceState({}, '', url)
-    }
-  } catch (e) {
-    // jakby coś nie poszło z URL-em, po prostu ignorujemy
-  }
+    await auth.login({
+  username: username.value,
+  password: password.value,
 })
 
-async function submit() {
-  error.value = ''
-  const ok = await auth
-    .login({
-      username: username.value,
-      password: password.value,
-    })
-    .catch(() => false)
-
-  if (!ok) {
-    error.value = 'Logowanie nieudane'
-  } else {
-    router.push({ name: 'home' }) // po zalogowaniu na /home
+    router.push({ name: 'home' })
+  } catch (e) {
+    error.value = 'Nieprawidłowy login lub hasło.'
   }
+}
+
+function showRegister() {
+  mode.value = 'register'
+}
+
+function showLogin() {
+  mode.value = 'login'
 }
 </script>
 
 <template>
-  <section
-    style="border:1px solid #555;padding:2rem;border-radius:16px;max-width:420px;margin:3rem auto;background:#222;color:#eee;text-align:center;"
-  >
-    <!-- Komunikat po weryfikacji maila -->
-    <div
-      v-if="msg"
-      style="background:#16351f;border:1px solid #32a852;padding:.75rem 1rem;margin-bottom:1rem;border-radius:10px;color:#dfffe8;text-align:left;font-size:0.9rem;"
-    >
-      {{ msg }}
-    </div>
+  <div class="auth-layout">
+    <!-- Lewa kolumna: Info -->
+    <section class="auth-info-column">
+      <InfoPanel />
+    </section>
 
-    <h2 style="font-size:1.8rem;margin-bottom:1.5rem;">Logowanie</h2>
+    <!-- Prawa kolumna: logowanie / rejestracja -->
+    <section class="auth-form-column">
+      <div class="auth-box">
+        <h1 class="auth-logo">Landliser</h1>
 
-    <div style="text-align:left;">
-      <label style="display:block;margin-bottom:.5rem;">
-        Login lub e-mail
-        <input
-          v-model="username"
-          autocomplete="username"
-          style="width:100%;margin-top:.25rem;padding:.4rem;border-radius:6px;border:1px solid #555;background:#333;color:#eee;"
-        />
-      </label>
+        <!-- TRYB LOGOWANIA -->
+        <template v-if="mode === 'login'">
+          <h2 class="section-title" style="margin-bottom: 1rem; color: white;">
+            Logowanie
+          </h2>
 
-      <label style="display:block;margin-top:.75rem;margin-bottom:.5rem;">
-        Hasło
-        <input
-          type="password"
-          v-model="password"
-          autocomplete="current-password"
-          style="width:100%;margin-top:.25rem;padding:.4rem;border-radius:6px;border:1px solid #555;background:#333;color:#eee;"
-        />
-      </label>
-    </div>
+          <form @submit.prevent="handleLogin">
+            <div class="auth-input-group">
+              <label class="label" for="username">Login</label>
+              <input
+                id="username"
+                v-model="username"
+                type="text"
+                class="input"
+                autocomplete="username"
+              />
+            </div>
 
-    <button
-      @click="submit"
-      :disabled="auth.isLoading"
-      style="margin-top:1.5rem;padding:.6rem 1.8rem;border-radius:10px;border:none;background:#000;color:#fff;cursor:pointer;"
-    >
-      {{ auth.isLoading ? 'Logowanie…' : 'Zaloguj' }}
-    </button>
+            <div class="auth-input-group">
+              <label class="label" for="password">Hasło</label>
+              <input
+                id="password"
+                v-model="password"
+                type="password"
+                class="input"
+                autocomplete="current-password"
+              />
+            </div>
 
-    <p v-if="error" style="color:#ff4d4f;margin-top:1rem;">{{ error }}</p>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="auth.isLoading"
+            >
+              {{ auth.isLoading ? 'Logowanie…' : 'Zaloguj' }}
+            </button>
 
-    <ForgotPassword />
+            <p v-if="error" class="auth-error">
+              {{ error }}
+            </p>
+          </form>
 
-    <p style="margin-top:1.5rem;">
-      Nie masz konta?
-      <RouterLink to="/register" style="color:#4da3ff;">Zarejestruj się</RouterLink>
-    </p>
-  </section>
+          <div class="auth-links">
+            <ForgotPassword />
+
+            <p style="margin-top: 10px;">
+              Nie masz konta?
+              <button
+                type="button"
+                class="link-button"
+                @click="showRegister"
+              >
+                Zarejestruj się
+              </button>
+            </p>
+          </div>
+        </template>
+
+        <!-- TRYB REJESTRACJI -->
+        <template v-else>
+          <RegisterForm />
+
+          <p class="auth-links" style="margin-top: 1.5rem;">
+            Masz już konto?
+            <button
+              type="button"
+              class="link-button"
+              @click="showLogin"
+            >
+              Zaloguj się
+            </button>
+          </p>
+        </template>
+      </div>
+    </section>
+  </div>
 </template>

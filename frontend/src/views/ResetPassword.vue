@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../api/http'
 import { AUTH } from '../api/endpoints'
+import InfoPanel from '../components/info.vue'
 
 
 const route = useRoute()
@@ -71,48 +72,71 @@ async function submit() {
 </script>
 
 <template>
-  <section
-    style="border:1px solid #555;padding:2rem;border-radius:16px;max-width:420px;margin:3rem auto;background:#222;color:#eee;text-align:center;"
-  >
-    <h2 style="font-size:1.8rem;margin-bottom:1.5rem;">Ustaw nowe hasło</h2>
+  <div class="auth-layout">
+    <!-- Lewa kolumna: Info -->
+    <section class="auth-info-column">
+      <InfoPanel />
+    </section>
 
-    <p style="font-size:0.9rem;opacity:.8;margin-bottom:1rem;">
-      Wprowadź nowe hasło dla swojego konta.
-    </p>
+    <!-- Prawa kolumna: ustawienie nowego hasła -->
+    <section class="auth-form-column">
+      <div class="auth-box">
+        <h1 class="auth-logo">Landliser</h1>
 
-    <p v-if="error" style="color:#ff4d4f;margin-bottom:1rem;">{{ error }}</p>
-    <p v-if="message" style="color:#65ff9a;margin-bottom:1rem;">{{ message }}</p>
+        <h2 class="section-title" style="margin-bottom: 0.5rem; color: white;">
+          Ustaw nowe hasło
+        </h2>
+        <p class="reset-subtitle">
+          Otworzyłeś link z wiadomości e-mail. Ustaw nowe hasło dla swojego konta.
+        </p>
 
-    <div v-if="!message">
-      <div style="text-align:left;">
-        <label style="display:block;margin-bottom:.75rem;">
-          Nowe hasło
-          <input
-            type="password"
-            v-model="newPassword"
-            autocomplete="new-password"
-            style="width:100%;margin-top:.25rem;padding:.4rem;border-radius:6px;border:1px solid #555;background:#333;color:#eee;"
-          />
-        </label>
+        <!-- komunikaty -->
+        <p
+          v-if="error"
+          class="field-error"
+          style="margin-bottom: 0.75rem;"
+        >
+          {{ error }}
+        </p>
 
-        <label style="display:block;margin-bottom:.75rem;">
-          Powtórz nowe hasło
-          <input
-            type="password"
-            v-model="newPassword2"
-            autocomplete="new-password"
-            style="width:100%;margin-top:.25rem;padding:.4rem;border-radius:6px;border:1px solid #555;background:#333;color:#eee;"
-          />
-        </label>
+        <p v-if="message" class="message-success">
+          {{ message }}
+        </p>
+
+        <!-- formularz pokazujemy tylko jeśli nie ma jeszcze komunikatu sukcesu -->
+        <form v-if="!message" @submit.prevent="submit">
+          <div class="auth-input-group">
+            <label class="label" for="new-password">Nowe hasło</label>
+            <input
+              id="new-password"
+              v-model="newPassword"
+              type="password"
+              class="input"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <div class="auth-input-group">
+            <label class="label" for="new-password2">Powtórz nowe hasło</label>
+            <input
+              id="new-password2"
+              v-model="newPassword2"
+              type="password"
+              class="input"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="loading"
+          >
+            {{ loading ? 'Zapisywanie…' : 'Zmień hasło' }}
+          </button>
+        </form>
       </div>
-
-      <button
-        @click="submit"
-        :disabled="loading"
-        style="margin-top:1.5rem;padding:.6rem 1.8rem;border-radius:10px;border:none;background:#000;color:#fff;cursor:pointer;"
-      >
-        {{ loading ? 'Zapisywanie…' : 'Zmień hasło' }}
-      </button>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
+

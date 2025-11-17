@@ -4,7 +4,6 @@ import { useAuthStore } from '../stores/auth'
 import VerifyEmailView from '../views/VerifyEmail.vue'
 import HomeView from '../views/home.vue'
 import LoginView from '../views/loginForm.vue'
-import RegisterView from '../views/registerForm.vue'
 import ResetPasswordView from '../views/ResetPassword.vue'
 
 const routes = [
@@ -14,20 +13,10 @@ const routes = [
     component: LoginView,
   },
   {
-    path: '/register',
-    name: 'register',
-    component: RegisterView,
-  },
-  {
     path: '/home',
     name: 'home',
     component: HomeView,
     meta: { requiresAuth: true },   // ⬅️ wymaga zalogowania
-  },
-  {
-    path: '/verify-email',
-    name: 'verify-email',
-    component: VerifyEmailView,
   },
   {
     path: '/reset-password',
