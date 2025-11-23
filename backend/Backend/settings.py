@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user_management',
     'corsheaders',
     'rest_framework',
+    'parcel_data',
 ]
 
 MIDDLEWARE = [
