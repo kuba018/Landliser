@@ -68,7 +68,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': True,
 }
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'Backend.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +85,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'Backend.wsgi.application'
 
 DATABASES = {
     "default": {
