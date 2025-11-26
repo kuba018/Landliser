@@ -1,14 +1,13 @@
 <template>
   <section class="info-panel">
-    <h2 class="info-title">Info</h2>
+    <h2 class="info-title">Informacja</h2>
 
     <div class="info-list">
 
       <article class="info-card">
         <h3 class="info-card-title">Szybkie sprawdzenie działki</h3>
         <p class="info-card-text">
-          Tutaj opiszesz, że użytkownik może wpisać numer działki
-          lub adres, a aplikacja pobierze dane z ewidencji i obliczy podatek.
+          Po udanej rejestracji, należy zweryfikować swój adres email poprzez link aktywacyjny wysłany na wskazaną skrzynke pocztową.
         </p>
       </article>
 

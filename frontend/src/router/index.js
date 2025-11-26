@@ -9,19 +9,24 @@ import ResetPasswordView from '../views/ResetPassword.vue'
 const routes = [
   {
     path: '/',
-    name: 'login',
+    name: 'login',          // to jest TWOJE logowanie
     component: LoginView,
   },
   {
     path: '/home',
     name: 'home',
     component: HomeView,
-    meta: { requiresAuth: true },   // ⬅️ wymaga zalogowania
+    meta: { requiresAuth: true },
   },
   {
     path: '/reset-password',
     name: 'reset-password',
-    component: ResetPasswordView,    
+    component: ResetPasswordView,
+  },
+  {
+    path: '/verify-email',
+    name: 'verify-email',
+    component: VerifyEmailView,
   },
 ]
 
@@ -30,18 +35,17 @@ const router = createRouter({
   routes,
 })
 
-// globalny guard
 router.beforeEach((to) => {
   const auth = useAuthStore()
 
+  // dostęp do /home bez zalogowania → wróć na '/'
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    // jeśli próbuje wejść na /home bez logowania → na / (login)
-    return { name: 'login' }
+    return { path: '/' }
   }
 
-  // jeśli user zalogowany i idzie na / lub /login → przerzuć na /home
-  if ((to.name === 'login' || to.name === 'register') && auth.isAuthenticated) {
-    return { name: 'home' }
+  // opcjonalnie: jak user jest zalogowany i wejdzie na '/', przerzuć go na /home
+  if (to.path === '/' && auth.isAuthenticated) {
+    return { path: '/home' }
   }
 
   return true

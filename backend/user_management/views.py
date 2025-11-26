@@ -3,6 +3,7 @@ from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import (
     RegisterSerializer,
@@ -108,3 +109,11 @@ class PasswordResetConfirmView(APIView):
             {"detail": "Hasło zostało zmienione."},
             status=status.HTTP_200_OK,
         )
+    
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response({"message": "Konto zostało usunięte."}, status=status.HTTP_204_NO_CONTENT)

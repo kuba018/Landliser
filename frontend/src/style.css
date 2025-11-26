@@ -120,6 +120,11 @@ a:hover {
   border-radius: var(--radius-md);
   margin-bottom: 25px;
 }
+.card-muted {
+  /* delikatny, jasnoszary kolor tła – ten sam klimat co kontener "Info" */
+  background-color: #f3f4f6;
+}
+
 
 .section-title {
   font-size: 20px;
@@ -170,8 +175,10 @@ a:hover {
 }
 
 .btn-primary {
-  background: var(--primary-700);
+  background: var(--primary-900);
   color: var(--text-light);
+  border: 1px solid;
+  border-color: var(--primary-500);
 }
 
 .btn-primary:hover {
@@ -217,7 +224,7 @@ a:hover {
 
 .table td {
   padding: 12px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--pri);
 }
 
 .table tr:last-child td {
@@ -273,13 +280,12 @@ a:hover {
   position: relative;
   z-index: 1;
 
-  /* jasny błękit z gradientem (jak na mockupie) */
+
   background: linear-gradient(
-    180deg,
-    rgba(59, 130, 246, 0.20) 0%,
-    rgba(59, 130, 246, 0.12) 40%,
-    rgba(59, 130, 246, 0.06) 70%,
-    rgba(59, 130, 246, 0.03) 100%
+    90deg,
+    rgba(22, 77, 116, 0.327) 0%,
+    rgba(22, 77, 116, 0.463) 50%,
+    rgba(22, 77, 116, 0.633) 100%
   );
 }
 
@@ -318,7 +324,7 @@ a:hover {
 }
 
 .info-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.6);
   padding: 18px 22px;
   border-radius: 14px;
   border: 1px solid #e3e8ef;
@@ -339,6 +345,63 @@ a:hover {
   line-height: 1.55;
   color: #4b5563;
 }
+.account-panel {
+  max-width: 700px;
+}
+
+/* nagłówek sekcji, analogicznie do .info-title */
+.account-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  color: var(--primary-900);
+}
+
+/* kontener na bloki / formularze wewnątrz "Moje konto" */
+.account-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* pojedynczy blok (dane użytkownika, zmiana hasła itd.) */
+.account-card {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 18px 22px;
+  border-radius: 14px;
+  border: 1px solid #e3e8ef;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* tytuł karty wewnątrz "Moje konto" */
+.account-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--primary-900);
+}
+
+/* tekst pomocniczy pod tytułem */
+.account-card-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #4b5563;
+}
+
+/* opcjonalnie – siatka pól formularza */
+.account-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px 20px;
+  margin-top: 12px;
+}
+
 
 /* --- Prawa kolumna: logowanie --- */
 
@@ -441,4 +504,9 @@ a:hover {
   font-size: 13px;
   color: #e5e7eb;
   margin-bottom: 1rem;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
